@@ -17,7 +17,7 @@ class Tbl_berkas extends CI_Controller
     {
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->uri->segment(3));
-        
+
         if ($q <> '') {
             $config['base_url'] = base_url() . '.php/c_url/index.html?q=' . urlencode($q);
             $config['first_url'] = base_url() . 'index.php/tbl_berkas/index.html?q=' . urlencode($q);
@@ -42,46 +42,47 @@ class Tbl_berkas extends CI_Controller
             'total_rows' => $config['total_rows'],
             'start' => $start,
         );
-        $this->template->load('template','tbl_berkas/tbl_berkas_list', $data);
+        $this->template->load('template', 'tbl_berkas/tbl_berkas_list', $data);
     }
 
-    public function read($id) 
+    public function read($id)
     {
         $row = $this->Tbl_berkas_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'id_berkas' => $row->id_berkas,
-		'kode_booking' => $row->kode_booking,
-		'nama' => $row->nama,
-		'nik' => $row->nik,
-		'pekerjaan' => $row->pekerjaan,
-		'tanggal_booking' => $row->tanggal_booking,
-		'status' => $row->status,
-	    );
-            $this->template->load('template','tbl_berkas/tbl_berkas_read', $data);
+                'id_berkas' => $row->id_berkas,
+                'kode_booking' => $row->kode_booking,
+                'nama' => $row->nama,
+                'nik' => $row->nik,
+                'pekerjaan' => $row->pekerjaan,
+                'tanggal_booking' => $row->tanggal_booking,
+                'status' => $row->status,
+            );
+            $this->template->load('template', 'tbl_berkas/tbl_berkas_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('tbl_berkas'));
         }
     }
 
-    public function create() 
+    public function create()
     {
         $data = array(
             'button' => 'Create',
             'action' => site_url('tbl_berkas/create_action'),
-	    'id_berkas' => set_value('id_berkas'),
-	    'kode_booking' => set_value('kode_booking'),
-	    'nama' => set_value('nama'),
-	    'nik' => set_value('nik'),
-	    'pekerjaan' => set_value('pekerjaan'),
-	    'tanggal_booking' => set_value('tanggal_booking'),
-	    'status' => set_value('status'),
-	);
-        $this->template->load('template','tbl_berkas/tbl_berkas_form', $data);
+            'data_syarat' => $this->Tbl_berkas_model->get_all_syarat(),
+            'id_berkas' => set_value('id_berkas'),
+            'kode_booking' => set_value('kode_booking'),
+            'nama' => set_value('nama'),
+            'nik' => set_value('nik'),
+            'pekerjaan' => set_value('pekerjaan'),
+            'tanggal_booking' => set_value('tanggal_booking'),
+            'status' => set_value('status'),
+        );
+        $this->template->load('template', 'tbl_berkas/tbl_berkas_form', $data);
     }
-    
-    public function create_action() 
+
+    public function create_action()
     {
         $this->_rules();
 
@@ -89,21 +90,21 @@ class Tbl_berkas extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'kode_booking' => $this->input->post('kode_booking',TRUE),
-		'nama' => $this->input->post('nama',TRUE),
-		'nik' => $this->input->post('nik',TRUE),
-		'pekerjaan' => $this->input->post('pekerjaan',TRUE),
-		'tanggal_booking' => $this->input->post('tanggal_booking',TRUE),
-		'status' => $this->input->post('status',TRUE),
-	    );
+                'kode_booking' => $this->input->post('kode_booking', TRUE),
+                'nama' => $this->input->post('nama', TRUE),
+                'nik' => $this->input->post('nik', TRUE),
+                'pekerjaan' => $this->input->post('pekerjaan', TRUE),
+                'tanggal_booking' => $this->input->post('tanggal_booking', TRUE),
+                'status' => $this->input->post('status', TRUE),
+            );
 
             $this->Tbl_berkas_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success 2');
             redirect(site_url('tbl_berkas'));
         }
     }
-    
-    public function update($id) 
+
+    public function update($id)
     {
         $row = $this->Tbl_berkas_model->get_by_id($id);
 
@@ -111,22 +112,22 @@ class Tbl_berkas extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('tbl_berkas/update_action'),
-		'id_berkas' => set_value('id_berkas', $row->id_berkas),
-		'kode_booking' => set_value('kode_booking', $row->kode_booking),
-		'nama' => set_value('nama', $row->nama),
-		'nik' => set_value('nik', $row->nik),
-		'pekerjaan' => set_value('pekerjaan', $row->pekerjaan),
-		'tanggal_booking' => set_value('tanggal_booking', $row->tanggal_booking),
-		'status' => set_value('status', $row->status),
-	    );
-            $this->template->load('template','tbl_berkas/tbl_berkas_form', $data);
+                'id_berkas' => set_value('id_berkas', $row->id_berkas),
+                'kode_booking' => set_value('kode_booking', $row->kode_booking),
+                'nama' => set_value('nama', $row->nama),
+                'nik' => set_value('nik', $row->nik),
+                'pekerjaan' => set_value('pekerjaan', $row->pekerjaan),
+                'tanggal_booking' => set_value('tanggal_booking', $row->tanggal_booking),
+                'status' => set_value('status', $row->status),
+            );
+            $this->template->load('template', 'tbl_berkas/tbl_berkas_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url('tbl_berkas'));
         }
     }
-    
-    public function update_action() 
+
+    public function update_action()
     {
         $this->_rules();
 
@@ -134,21 +135,21 @@ class Tbl_berkas extends CI_Controller
             $this->update($this->input->post('id_berkas', TRUE));
         } else {
             $data = array(
-		'kode_booking' => $this->input->post('kode_booking',TRUE),
-		'nama' => $this->input->post('nama',TRUE),
-		'nik' => $this->input->post('nik',TRUE),
-		'pekerjaan' => $this->input->post('pekerjaan',TRUE),
-		'tanggal_booking' => $this->input->post('tanggal_booking',TRUE),
-		'status' => $this->input->post('status',TRUE),
-	    );
+                'kode_booking' => $this->input->post('kode_booking', TRUE),
+                'nama' => $this->input->post('nama', TRUE),
+                'nik' => $this->input->post('nik', TRUE),
+                'pekerjaan' => $this->input->post('pekerjaan', TRUE),
+                'tanggal_booking' => $this->input->post('tanggal_booking', TRUE),
+                'status' => $this->input->post('status', TRUE),
+            );
 
             $this->Tbl_berkas_model->update($this->input->post('id_berkas', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('tbl_berkas'));
         }
     }
-    
-    public function delete($id) 
+
+    public function delete($id)
     {
         $row = $this->Tbl_berkas_model->get_by_id($id);
 
@@ -162,17 +163,17 @@ class Tbl_berkas extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules()
     {
-	$this->form_validation->set_rules('kode_booking', 'kode booking', 'trim|required');
-	$this->form_validation->set_rules('nama', 'nama', 'trim|required');
-	$this->form_validation->set_rules('nik', 'nik', 'trim|required');
-	$this->form_validation->set_rules('pekerjaan', 'pekerjaan', 'trim|required');
-	$this->form_validation->set_rules('tanggal_booking', 'tanggal booking', 'trim|required');
-	$this->form_validation->set_rules('status', 'status', 'trim|required');
+        $this->form_validation->set_rules('kode_booking', 'kode booking', 'trim|required');
+        $this->form_validation->set_rules('nama', 'nama', 'trim|required');
+        $this->form_validation->set_rules('nik', 'nik', 'trim|required');
+        $this->form_validation->set_rules('pekerjaan', 'pekerjaan', 'trim|required');
+        $this->form_validation->set_rules('tanggal_booking', 'tanggal booking', 'trim|required');
+        $this->form_validation->set_rules('status', 'status', 'trim|required');
 
-	$this->form_validation->set_rules('id_berkas', 'id_berkas', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('id_berkas', 'id_berkas', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
 }

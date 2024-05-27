@@ -5,7 +5,7 @@
                 <div class="box box-warning box-solid">
     
                     <div class="box-header">
-                        <h3 class="box-title">KELOLA DATA TBL_BERKAS</h3>
+                        <h3 class="box-title">KELOLA DATA PEMBERKASAN</h3>
                     </div>
         
         <div class="box-body">

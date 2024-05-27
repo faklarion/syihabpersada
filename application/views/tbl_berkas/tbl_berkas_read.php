@@ -4,7 +4,7 @@
 	<section class="content">
 		<div class="box box-warning box-solid">
 			<div class="box-header with-border">
-				<h3 class="box-title">DETAIL DATA TBL_BERKAS</h3>
+				<h3 class="box-title">DETAIL DATA PEMBERKASAN</h3>
 			</div>
 		
 		<table class='table table-bordered'>        

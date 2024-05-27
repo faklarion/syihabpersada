@@ -22,6 +22,12 @@ class Tbl_berkas_model extends CI_Model
         return $this->db->get($this->table)->result();
     }
 
+    function get_all_syarat()
+    {
+        $this->db->order_by('id_syarat', 'ASC');
+        return $this->db->get('tbl_syarat')->result();
+    }
+
     // get data by id
     function get_by_id($id)
     {

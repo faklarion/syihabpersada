@@ -2,7 +2,7 @@
 	<section class="content">
 		<div class="box box-warning box-solid">
 			<div class="box-header with-border">
-				<h3 class="box-title"><?php echo strtoupper($button) ?> DATA TBL_BERKAS</h3>
+				<h3 class="box-title"><?php echo strtoupper($button) ?> DATA PEMBERKASAN</h3>
 			</div>
 			<form action="<?php echo $action; ?>" method="post">
 			
@@ -17,7 +17,7 @@
 					</tr>
 	
 					<tr>
-						<td width='200'>Nik <?php echo form_error('nik') ?></td><td><input type="text" class="form-control" name="nik" id="nik" placeholder="Nik" value="<?php echo $nik; ?>" /></td>
+						<td width='200'>NIK <?php echo form_error('nik') ?></td><td><input type="text" class="form-control" name="nik" id="nik" placeholder="NIK" value="<?php echo $nik; ?>" /></td>
 					</tr>
 	
 					<tr>
@@ -27,6 +27,16 @@
 					<tr>
 						<td width='200'>Tanggal Booking <?php echo form_error('tanggal_booking') ?></td>
 						<td><input type="date" class="form-control" name="tanggal_booking" id="tanggal_booking" placeholder="Tanggal Booking" value="<?php echo $tanggal_booking; ?>" /></td>
+					</tr>
+
+					<tr>
+						<td width='200'>Kelengkapan Berkas</td>
+						<td>
+						<?php foreach ($data_syarat as $aresult): ?>
+							<label><input type="checkbox" name="id_syarat[]" value="<?= $aresult->id_syarat ?>"> <?php echo $aresult->syarat; ?></label> <small> (<?php echo $aresult->keterangan; ?>)</small><br>
+							<!-- Ganti 'id' dengan nama kolom yang sesuai dari tabel database -->
+						<?php endforeach; ?>
+						</td>
 					</tr>
 	
 					<tr>
