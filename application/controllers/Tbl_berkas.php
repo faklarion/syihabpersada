@@ -10,6 +10,7 @@ class Tbl_berkas extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_berkas_model');
+        $this->load->model('Tbl_syarat_model');
         $this->load->library('form_validation');
     }
 
@@ -37,6 +38,7 @@ class Tbl_berkas extends CI_Controller
 
         $data = array(
             'tbl_berkas_data' => $tbl_berkas,
+            'data_syarat' => $this->Tbl_berkas_model->get_all_syarat(),
             'q' => $q,
             'pagination' => $this->pagination->create_links(),
             'total_rows' => $config['total_rows'],
@@ -94,12 +96,15 @@ class Tbl_berkas extends CI_Controller
                 'nama' => $this->input->post('nama', TRUE),
                 'nik' => $this->input->post('nik', TRUE),
                 'pekerjaan' => $this->input->post('pekerjaan', TRUE),
-                'tanggal_booking' => $this->input->post('tanggal_booking', TRUE),
-                'status' => $this->input->post('status', TRUE),
+                'tanggal_booking' => date('Y-m-d'),
+                'status' => 'Proses Pengumpulan',
+                'id_users' => $this->session->userdata('id_users'),
+                'bi_checking' => $this->input->post('bi_checking', TRUE),
             );
 
+
             $this->Tbl_berkas_model->insert($data);
-            $this->session->set_flashdata('message', 'Create Record Success 2');
+            $this->session->set_flashdata('message', 'Input Data BERHASIL !');
             redirect(site_url('tbl_berkas'));
         }
     }
@@ -112,7 +117,9 @@ class Tbl_berkas extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('tbl_berkas/update_action'),
+                'data_syarat' => $this->Tbl_berkas_model->get_all_syarat(),
                 'id_berkas' => set_value('id_berkas', $row->id_berkas),
+                'bi_checking' => set_value('bi_checking', $row->bi_checking),
                 'kode_booking' => set_value('kode_booking', $row->kode_booking),
                 'nama' => set_value('nama', $row->nama),
                 'nik' => set_value('nik', $row->nik),
@@ -139,8 +146,7 @@ class Tbl_berkas extends CI_Controller
                 'nama' => $this->input->post('nama', TRUE),
                 'nik' => $this->input->post('nik', TRUE),
                 'pekerjaan' => $this->input->post('pekerjaan', TRUE),
-                'tanggal_booking' => $this->input->post('tanggal_booking', TRUE),
-                'status' => $this->input->post('status', TRUE),
+                'bi_checking' => $this->input->post('bi_checking', TRUE),
             );
 
             $this->Tbl_berkas_model->update($this->input->post('id_berkas', TRUE), $data);
@@ -163,14 +169,33 @@ class Tbl_berkas extends CI_Controller
         }
     }
 
+    public function simpan_syarat()
+    {
+
+        $id_syarat = count($this->input->post('id_syarat'));
+
+        for ($i = 0; $i < $id_syarat; $i++) {
+            $datas = array(
+                'id_syarat' => $this->input->post('id_syarat')[$i],
+                'id_berkas' => $this->input->post('id_berkas'),
+            );
+            // Simpan data ke database
+            $this->db->insert('tbl_syarat_berkas', $datas);
+        }
+        $this->session->set_flashdata('message', 'Update Ceklis BERHASIL !');
+        redirect(site_url('tbl_berkas'));
+
+
+    }
+
     public function _rules()
     {
         $this->form_validation->set_rules('kode_booking', 'kode booking', 'trim|required');
         $this->form_validation->set_rules('nama', 'nama', 'trim|required');
         $this->form_validation->set_rules('nik', 'nik', 'trim|required');
         $this->form_validation->set_rules('pekerjaan', 'pekerjaan', 'trim|required');
-        $this->form_validation->set_rules('tanggal_booking', 'tanggal booking', 'trim|required');
-        $this->form_validation->set_rules('status', 'status', 'trim|required');
+        //$this->form_validation->set_rules('tanggal_booking', 'tanggal booking', 'trim|required');
+        //$this->form_validation->set_rules('status', 'status', 'trim|required');
 
         $this->form_validation->set_rules('id_berkas', 'id_berkas', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');

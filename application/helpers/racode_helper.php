@@ -90,3 +90,32 @@ function autocomplate_json($table,$field){
     }
     echo json_encode($return_arr);
 }
+
+function tanggalIndo($tanggal) {
+    // Array untuk nama-nama bulan dalam bahasa Indonesia
+    $bulanIndo = array(
+        1 => 'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+    );
+
+    // Memecah tanggal berdasarkan delimiter "-"
+    $tanggalArray = explode("-", $tanggal);
+
+    // Mengambil bagian tanggal
+    $tahun = $tanggalArray[0];
+    $bulan = (int)$tanggalArray[1];
+    $hari = $tanggalArray[2];
+
+    // Menggabungkan bagian-bagian tersebut menjadi format tanggal Indonesia
+    return $hari . ' ' . $bulanIndo[$bulan] . ' ' . $tahun;
+}
