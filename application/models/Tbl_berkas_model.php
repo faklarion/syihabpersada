@@ -28,6 +28,12 @@ class Tbl_berkas_model extends CI_Model
         return $this->db->get('tbl_syarat')->result();
     }
 
+    function get_all_syarat_checked($id)
+    {
+        $this->db->where('id_berkas' , $id);   
+        return $this->db->get('tbl_syarat_berkas')->result_array();
+    }
+
     // get data by id
     function get_by_id($id)
     {

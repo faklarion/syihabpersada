@@ -140,12 +140,27 @@ foreach ($tbl_berkas_data as $row): ?>
 
                             <tr>
                                 <td width='200'>Kelengkapan Berkas</td>
+                                <?php 
+                                            $query = $this->db->query('SELECT * FROM tbl_syarat_berkas WHERE id_berkas = '.$row->id_berkas.'');
+                                            $result = $query->result_array(); 
+                                            foreach ($result as $res) {
+                                                //echo $res['id_syarat'];
+                                                $ids[] = $res['id_syarat'];
+                                            }
+                                            if($result) {
+                                                $idsa = $ids;
+                                            } else {
+                                                $idsa = array(0);
+                                            }
+                                ?>
                                 <td>
                                     <?php foreach ($data_syarat as $aresult): ?>
-                                        <label><input type="checkbox" name="id_syarat[]" id="id_syarat" value="<?= $aresult->id_syarat ?>">
+                                        
+                                        <label><input type="checkbox" name="id_syarat[]" id="id_syarat" value="<?= $aresult->id_syarat ?>" <?php if (in_array($aresult->id_syarat,$idsa)){ echo "checked"; }?>>
                                             <?php echo $aresult->syarat; ?></label> <small>
                                             (<?php echo $aresult->keterangan; ?>)</small><br>
                                         <!-- Ganti 'id' dengan nama kolom yang sesuai dari tabel database -->
+                                       
                                     <?php endforeach; ?>
                                 </td>
                             </tr>

@@ -77,6 +77,7 @@ class Tbl_berkas extends CI_Controller
             'kode_booking' => set_value('kode_booking'),
             'nama' => set_value('nama'),
             'nik' => set_value('nik'),
+            'bi_checking' => set_value('bi_checking'),
             'pekerjaan' => set_value('pekerjaan'),
             'tanggal_booking' => set_value('tanggal_booking'),
             'status' => set_value('status'),
@@ -173,13 +174,16 @@ class Tbl_berkas extends CI_Controller
     {
 
         $id_syarat = count($this->input->post('id_syarat'));
-
+        $id_berkas = $this->input->post('id_berkas');
+        
+        $this->db->delete('tbl_syarat_berkas', array('id_berkas' => $id_berkas)); 
         for ($i = 0; $i < $id_syarat; $i++) {
             $datas = array(
                 'id_syarat' => $this->input->post('id_syarat')[$i],
-                'id_berkas' => $this->input->post('id_berkas'),
+                'id_berkas' => $id_berkas,
             );
             // Simpan data ke database
+           
             $this->db->insert('tbl_syarat_berkas', $datas);
         }
         $this->session->set_flashdata('message', 'Update Ceklis BERHASIL !');
