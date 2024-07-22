@@ -10,7 +10,6 @@ class Tbl_berkas extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_berkas_model');
-        $this->load->model('Tbl_syarat_model');
         $this->load->library('form_validation');
     }
 
@@ -30,7 +29,7 @@ class Tbl_berkas extends CI_Controller
         $config['per_page'] = 10;
         $config['page_query_string'] = FALSE;
         $config['total_rows'] = $this->Tbl_berkas_model->total_rows($q);
-        $tbl_berkas = $this->Tbl_berkas_model->get_limit_data($config['per_page'], $start, $q);
+        $tbl_berkas = $this->Tbl_berkas_model->get_all();
         $config['full_tag_open'] = '<ul class="pagination pagination-sm no-margin pull-right">';
         $config['full_tag_close'] = '</ul>';
         $this->load->library('pagination');
@@ -38,7 +37,6 @@ class Tbl_berkas extends CI_Controller
 
         $data = array(
             'tbl_berkas_data' => $tbl_berkas,
-            'data_syarat' => $this->Tbl_berkas_model->get_all_syarat(),
             'q' => $q,
             'pagination' => $this->pagination->create_links(),
             'total_rows' => $config['total_rows'],
@@ -72,7 +70,6 @@ class Tbl_berkas extends CI_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url('tbl_berkas/create_action'),
-            'data_syarat' => $this->Tbl_berkas_model->get_all_syarat(),
             'id_berkas' => set_value('id_berkas'),
             'kode_booking' => set_value('kode_booking'),
             'nama' => set_value('nama'),
@@ -118,7 +115,6 @@ class Tbl_berkas extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('tbl_berkas/update_action'),
-                'data_syarat' => $this->Tbl_berkas_model->get_all_syarat(),
                 'id_berkas' => set_value('id_berkas', $row->id_berkas),
                 'bi_checking' => set_value('bi_checking', $row->bi_checking),
                 'kode_booking' => set_value('kode_booking', $row->kode_booking),
@@ -156,6 +152,16 @@ class Tbl_berkas extends CI_Controller
         }
     }
 
+    public function simpan_syarat() {
+        $ceklis = implode(',', $this->input->post('id_syarat'));
+        $data = array(
+            'ceklis' => $ceklis,
+        );
+        $this->Tbl_berkas_model->update($this->input->post('id_berkas', TRUE), $data);
+        $this->session->set_flashdata('message', 'Update Ceklis Success');
+        redirect(site_url('tbl_berkas'));
+    }
+
     public function delete($id)
     {
         $row = $this->Tbl_berkas_model->get_by_id($id);
@@ -170,27 +176,7 @@ class Tbl_berkas extends CI_Controller
         }
     }
 
-    public function simpan_syarat()
-    {
-
-        $id_syarat = count($this->input->post('id_syarat'));
-        $id_berkas = $this->input->post('id_berkas');
-        
-        $this->db->delete('tbl_syarat_berkas', array('id_berkas' => $id_berkas)); 
-        for ($i = 0; $i < $id_syarat; $i++) {
-            $datas = array(
-                'id_syarat' => $this->input->post('id_syarat')[$i],
-                'id_berkas' => $id_berkas,
-            );
-            // Simpan data ke database
-           
-            $this->db->insert('tbl_syarat_berkas', $datas);
-        }
-        $this->session->set_flashdata('message', 'Update Ceklis BERHASIL !');
-        redirect(site_url('tbl_berkas'));
-
-
-    }
+    
 
     public function _rules()
     {

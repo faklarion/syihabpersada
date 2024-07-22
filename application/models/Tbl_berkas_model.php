@@ -18,20 +18,9 @@ class Tbl_berkas_model extends CI_Model
     // get all
     function get_all()
     {
+        $this->db->join('tbl_user', 'tbl_user.id_users = tbl_berkas.id_users');
         $this->db->order_by($this->id, $this->order);
         return $this->db->get($this->table)->result();
-    }
-
-    function get_all_syarat()
-    {
-        $this->db->order_by('id_syarat', 'ASC');
-        return $this->db->get('tbl_syarat')->result();
-    }
-
-    function get_all_syarat_checked($id)
-    {
-        $this->db->where('id_berkas' , $id);   
-        return $this->db->get('tbl_syarat_berkas')->result_array();
     }
 
     // get data by id
