@@ -176,7 +176,33 @@ class Tbl_berkas extends CI_Controller
         }
     }
 
-    
+    public function simpan_marketing($id) {
+        $row = $this->Tbl_berkas_model->get_by_id($id);
+
+        date_default_timezone_set('Asia/Makassar');
+
+        $data = array(
+            'kode_booking' => $row->kode_booking,
+            'nama' => $row->nama,
+            'nik' => $row->nik,
+            'pekerjaan' => $row->pekerjaan,
+            'bi_checking' => $row->bi_checking,
+            'tanggal_booking' => $row->tanggal_booking,
+            'status' => 'Pengumpulan Admin',
+            'id_users' => $row->id_users,
+            'tanggal_selesai_marketing' => date('Y-m-d'),
+        );
+
+        $dataBerkas = array(
+            'status' => 'Diserahkan ke Admin',
+            'tanggal_selesai' => date('Y-m-d'),
+        );
+
+        $this->db->insert('tbl_berkas_admin', $data);
+        $this->Tbl_berkas_model->update($id, $dataBerkas);
+        $this->session->set_flashdata('message', 'Update Data Success');
+        redirect(site_url('tbl_berkas'));
+    }
 
     public function _rules()
     {

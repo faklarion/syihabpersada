@@ -12,11 +12,11 @@
                         <div class='row'>
                             <div class='col-md-9'>
                                 <div style="padding-bottom: 10px;">
-                                    <?php echo anchor(site_url('tbl_berkas/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?>
+                                    <!-- <?php echo anchor(site_url('tbl_berkas_admin/create'), '<i class="fa fa-wpforms" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm"'); ?> -->
                                 </div>
                             </div>
                             <!-- <div class='col-md-3'>
-                                <form action="<?php echo site_url('tbl_berkas/index'); ?>" class="form-inline"
+                                <form action="<?php echo site_url('tbl_berkas_admin/index'); ?>" class="form-inline"
                                     method="get">
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="q" value="<?php echo $q; ?>">
@@ -24,7 +24,7 @@
                                             <?php
                                             if ($q <> '') {
                                                 ?>
-                                                <a href="<?php echo site_url('tbl_berkas'); ?>"
+                                                <a href="<?php echo site_url('tbl_berkas_admin'); ?>"
                                                     class="btn btn-default">Reset</a>
                                                 <?php
                                             }
@@ -62,37 +62,38 @@
                                 <th>BI Checking</th>
                                 <th>Marketing</th>
                                 <th>Keterangan Ceklis</th>
+                                <th>Tanggal Selesai Marketing</th>
                                 <th>Tanggal Selesai</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                            foreach ($tbl_berkas_data as $tbl_berkas) {
+                            foreach ($tbl_berkas_admin_data as $tbl_berkas_admin) {
                                 ?>
                                 <tr>
                                     <td><?php echo ++$start ?></td>
-                                    <td><?php echo $tbl_berkas->kode_booking ?></td>
-                                    <td><?php echo $tbl_berkas->nama ?></td>
-                                    <td><?php echo $tbl_berkas->nik ?></td>
-                                    <td><?php echo $tbl_berkas->pekerjaan ?></td>
-                                    <td><?php echo tanggalIndo($tbl_berkas->tanggal_booking) ?></td>
-                                    <td><?php echo $tbl_berkas->status ?></td>
+                                    <td><?php echo $tbl_berkas_admin->kode_booking ?></td>
+                                    <td><?php echo $tbl_berkas_admin->nama ?></td>
+                                    <td><?php echo $tbl_berkas_admin->nik ?></td>
+                                    <td><?php echo $tbl_berkas_admin->pekerjaan ?></td>
+                                    <td><?php echo tanggalIndo($tbl_berkas_admin->tanggal_booking) ?></td>
+                                    <td><?php echo $tbl_berkas_admin->status ?></td>
                                     <td>
                                         <?php
-                                        if ($tbl_berkas->bi_checking == 1) {
+                                        if ($tbl_berkas_admin->bi_checking == 1) {
                                             echo 'Bersih';
-                                        } elseif ($tbl_berkas->bi_checking == 2) {
+                                        } elseif ($tbl_berkas_admin->bi_checking == 2) {
                                             echo 'Kol-2';
-                                        } elseif ($tbl_berkas->bi_checking == 3) {
+                                        } elseif ($tbl_berkas_admin->bi_checking == 3) {
                                             echo 'Kol-5';
                                         }
                                         ?>
                                     </td>
-                                    <td><?php echo $tbl_berkas->full_name ?></td>
+                                    <td><?php echo $tbl_berkas_admin->full_name ?></td>
                                     <td>
                                     <?php
-                                        $checklist = explode(',', $tbl_berkas->ceklis);
+                                        $checklist = explode(',', $tbl_berkas_admin->ceklis);
 
                                         $completed = [
                                             '1',
@@ -111,52 +112,53 @@
                                         // Memeriksa apakah semua item di $checklist ada di $completed
                                         if (empty(array_diff($completed, $checklist))) {
                                             echo "<button class='btn btn-success btn-sm'>Semua ceklis sudah lengkap!</button><br>";
-                                            if($tbl_berkas->status != 'Diserahkan ke Admin') {
-                                            $link = site_url('tbl_berkas/simpan_marketing/'.$tbl_berkas->id_berkas.'');
-                                            echo "<a href='$link' class='btn btn-sm btn-warning' onclick='return confirm(\"Serahkan Ke Admin?\")'><i class='fa fa-floppy-o' aria-hidden='true'></i> Serahkan ke admin</a>";
+                                            if($tbl_berkas_admin->status != 'Pemberkasan Selesai') {
+                                            $link = site_url('tbl_berkas_admin/simpan_admin/'.$tbl_berkas_admin->id_berkas.'');
+                                            echo "<a href='$link' class='btn btn-sm btn-warning' onclick='return confirm(\"Selesai Pemberkasan ?\")'><i class='fa fa-floppy-o' aria-hidden='true'></i> Selesaikan Pemberkasan</a>";
                                             }
                                         } else {
                                             echo "<button class='btn btn-danger btn-sm'>Masih ada ceklis yang belum selesai.</button>";
                                         }
                                         ?>
                                     </td>
+                                    <td><?php echo tanggalIndo($tbl_berkas_admin->tanggal_selesai_marketing)?></td>
                                     <td>
                                         <?php 
-                                        if($tbl_berkas->tanggal_selesai == NULL) {
+                                        if($tbl_berkas_admin->tanggal_selesai == NULL) {
                                             echo 'Belum Selesai !';
                                         } else {
-                                            echo tanggalIndo($tbl_berkas->tanggal_selesai);
-                                            // Mengambil tanggal dari objek (asumsi formatnya adalah string tanggal)
-                                             $date1 = $tbl_berkas->tanggal_booking;
-                                             $date2 = $tbl_berkas->tanggal_selesai;
- 
-                                             // Mengonversi string tanggal menjadi objek DateTime
-                                             $dateTime1 = new DateTime($date1);
-                                             $dateTime2 = new DateTime($date2);
- 
-                                             // Menghitung selisih
-                                             $interval = $dateTime1->diff($dateTime2);
-                                             $daysWithAddition = $interval->days + 1;
- 
-                                             // Menampilkan hasil
-                                             echo "<br>Waktu Pengerjaan: " . $daysWithAddition . " Hari";
+                                            echo tanggalIndo($tbl_berkas_admin->tanggal_selesai);
+                                           // Mengambil tanggal dari objek (asumsi formatnya adalah string tanggal)
+                                            $date1 = $tbl_berkas_admin->tanggal_selesai_marketing;
+                                            $date2 = $tbl_berkas_admin->tanggal_selesai;
+
+                                            // Mengonversi string tanggal menjadi objek DateTime
+                                            $dateTime1 = new DateTime($date1);
+                                            $dateTime2 = new DateTime($date2);
+
+                                            // Menghitung selisih
+                                            $interval = $dateTime1->diff($dateTime2);
+                                            $daysWithAddition = $interval->days + 1;
+
+                                            // Menampilkan hasil
+                                            echo "<br>Waktu Pengerjaan: " . $daysWithAddition . " Hari";
                                         }
                                         ?>
                                     </td>
                                     <td style="text-align:center" width="200px">
                                         <?php 
-                                        if($tbl_berkas->status != 'Diserahkan ke Admin') {
-                                            if ($this->session->userdata('id_user_level') == 1) { ?>
+                                        if($tbl_berkas_admin->status != 'Pemberkasan Selesai') {
+                                            if ($this->session->userdata('id_user_level') == 2) { ?>
                                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                                data-target="#myModal<?php echo $tbl_berkas->id_berkas ?>"><i
+                                                data-target="#myModal<?php echo $tbl_berkas_admin->id_berkas ?>"><i
                                                     class="fa fa-calendar-check-o" aria-hidden="true"> Ceklis
                                                     Berkas</i></button>
                                         <?php } ?>
                                         <?php
-                                        echo '  ';
-                                        echo anchor(site_url('tbl_berkas/update/' . $tbl_berkas->id_berkas), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm"');
-                                        echo '  ';
-                                        echo anchor(site_url('tbl_berkas/delete/' . $tbl_berkas->id_berkas), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm" Delete onclick="javascript: return confirm(\'Are You Sure ?\')"');
+                                        //echo '  ';
+                                        //echo anchor(site_url('tbl_berkas_admin/update/' . $tbl_berkas_admin->id_berkas), '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm"');
+                                        //echo '  ';
+                                        //echo anchor(site_url('tbl_berkas_admin/delete/' . $tbl_berkas_admin->id_berkas), '<i class="fa fa-trash-o" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm" Delete onclick="javascript: return confirm(\'Are You Sure ?\')"');
                                         ?>
                                     </td>
                                 </tr>
@@ -174,7 +176,7 @@
 </div>
 
 <!-- MODAL SUB -->
-<?php foreach ($tbl_berkas_data as $row): ?>
+<?php foreach ($tbl_berkas_admin_data as $row): ?>
     <div class="modal fade bd-example-modal-md" id="myModal<?php echo $row->id_berkas ?>" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-md" role="document" style="width: 100%;">
@@ -188,7 +190,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- FORM -->
-                    <form action="<?php echo site_url('tbl_berkas/simpan_syarat') ?>" method="post">
+                    <form action="<?php echo site_url('tbl_berkas_admin/simpan_syarat') ?>" method="post">
                         <input type="hidden" name="id_berkas" value="<?php echo $row->id_berkas?>">
                         <?php 
                             $checkedValues      = explode(',', $row->ceklis);
