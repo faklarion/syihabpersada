@@ -4,7 +4,12 @@
 			<div class="box-header with-border">
 				<h3 class="box-title"><?php echo strtoupper($button) ?> DATA PEMBERKASAN</h3>
 			</div>
-			<form action="<?php echo $action; ?>" method="post">
+			<div class="col-md-4 text-center">
+                <div style="margin-top: 8px" id="message">
+                    <?php echo $this->session->userdata('message') <> '' ? $this->session->userdata('message') : ''; ?>
+                </div>
+            </div>
+			<form action="<?php echo $action; ?>" method="post" id="myForm">
 
 				<table class='table table-bordered'>
 
@@ -49,6 +54,27 @@
 						</td>
 					</tr>
 
+					<?php
+                    	if ($this->uri->segment(2) == 'create') {
+                    ?>
+
+					<tr>
+						<td width='200'>Rumah</td>
+						<td>
+							<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Pilih Rumah</button>
+							<input type="hidden" name="id_rumah_input" id="id_rumah_input" class="form-control" required>
+						</td>
+					</tr>
+					<tr>
+                        <td width='200'>Nama Komplek</td>
+                        <td><span id="nama_komplek">-</span></td>
+                    </tr>
+                    <tr>
+                        <td width='200'>Blok</td>
+                        <td><span id="blok">-</span><span id="nomer">-</span></td>
+                    </tr>
+
+					<?php } ?>
 
 					<tr>
 						<td></td>
@@ -66,3 +92,44 @@
 		</div>
 	</section>
 </div>
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- konten modal-->
+			<div class="modal-content">
+				<!-- heading modal -->
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Pilih Rumah</h4>
+				</div>
+				<!-- body modal -->
+				<div class="modal-body">
+				<form action="#" method="post">
+					<label for="id_rumah">Rumah</label>
+						<select name="id_rumah" id="id_rumah_select" class="form-control">
+							<?php foreach ($data_rumah as $rumah): ?>
+								<option value="<?php echo $rumah->id_rumah; ?>" data-nama-komplek="<?php echo $rumah->nama_komplek; ?>" data-blok="<?php echo $rumah->blok; ?>" data-nomer="<?php echo $rumah->nomer; ?>" data-id-rumah="<?php echo $rumah->id_rumah; ?>" <?php echo set_select('id_rumah', $rumah->id_rumah, isset($id_rumah) && $id_rumah == $rumah->id_rumah); ?>>
+									<?php echo $rumah->nama_komplek; ?> - <?php echo $rumah->blok; ?><?php echo $rumah->nomer; ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
+					<button type="button" class="btn btn-sm btn-danger" id="select_rumah">Pilih</button>
+				</form>
+				</div>
+				<!-- footer modal -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script>
+  document.getElementById('myForm').addEventListener('submit', function(event) {
+    var hiddenInput = document.getElementById('id_rumah_input');
+    if (hiddenInput.value.trim() === '') {
+      event.preventDefault(); // Mencegah formulir dikirim
+      alert('Pilih Rumah Terlebih Dahulu !');
+    }
+  });
+</script>

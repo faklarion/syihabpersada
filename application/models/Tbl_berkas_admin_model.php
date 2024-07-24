@@ -18,7 +18,10 @@ class Tbl_berkas_admin_model extends CI_Model
     // get all
     function get_all()
     {
+        $this->db->select('*, tbl_berkas_admin.status');
         $this->db->join('tbl_user', 'tbl_user.id_users = tbl_berkas_admin.id_users');
+        $this->db->join('tbl_rumah', 'tbl_rumah.id_rumah = tbl_berkas_admin.id_rumah');
+        $this->db->join('tbl_komplek', 'tbl_komplek.id_komplek = tbl_rumah.id_komplek');
         $this->db->order_by($this->id, $this->order);
         return $this->db->get($this->table)->result();
     }

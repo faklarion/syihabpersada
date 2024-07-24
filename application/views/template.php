@@ -351,13 +351,49 @@
         <!-- DataTables Responsive JS -->
         <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
         <script src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap4.min.js"></script>
-            <!-- Inisialisasi DataTable -->
+        <!-- Inisialisasi DataTable -->
         <script>
         $(document).ready(function() {
             $('#tabelberkas').DataTable({
                 responsive: true
             });
         });
+        </script>
+        <script>
+        $(document).ready(function() {
+            $('#tabelrumah').DataTable({
+                responsive: true
+            });
+        });
+        </script>
+        <script>
+            $(document).ready(function() {
+                // Inisialisasi Select2 ketika modal ditampilkan
+                $('#myModal').on('shown.bs.modal', function () {
+                    $('#id_rumah_select').select2({
+                        placeholder: "Pilih Rumah",
+                        allowClear: true
+                    });
+                });
+
+               // Ketika tombol Pilih di modal diklik
+                $('#select_rumah').on('click', function() {
+                    var selectedOption = $('#id_rumah_select').find('option:selected');
+                    var idRumah = selectedOption.data('id-rumah');
+                    var namaKomplek = selectedOption.data('nama-komplek');
+                    var blok = selectedOption.data('blok');
+                    var nomer = selectedOption.data('nomer');
+                    
+                    // Isi data ke input di luar modal
+                    $('#id_rumah_input').val(idRumah);
+                    $('#nama_komplek').text(namaKomplek);
+                    $('#blok').text(blok);
+                    $('#nomer').text(nomer);
+
+                    // Tutup modal
+                    $('#myModal').modal('hide');
+                });
+            });
         </script>
         <!-- page script -->
         <script>

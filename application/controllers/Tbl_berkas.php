@@ -10,6 +10,7 @@ class Tbl_berkas extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Tbl_berkas_model');
+        $this->load->model('Tbl_rumah_model');
         $this->load->library('form_validation');
     }
 
@@ -70,6 +71,7 @@ class Tbl_berkas extends CI_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url('tbl_berkas/create_action'),
+            'data_rumah' => $this->Tbl_rumah_model->get_all_rumah_asc(),
             'id_berkas' => set_value('id_berkas'),
             'kode_booking' => set_value('kode_booking'),
             'nama' => set_value('nama'),
@@ -88,22 +90,35 @@ class Tbl_berkas extends CI_Controller
 
         if ($this->form_validation->run() == FALSE) {
             $this->create();
-        } else {
-            $data = array(
-                'kode_booking' => $this->input->post('kode_booking', TRUE),
-                'nama' => $this->input->post('nama', TRUE),
-                'nik' => $this->input->post('nik', TRUE),
-                'pekerjaan' => $this->input->post('pekerjaan', TRUE),
-                'tanggal_booking' => date('Y-m-d'),
-                'status' => 'Proses Pengumpulan',
-                'id_users' => $this->session->userdata('id_users'),
-                'bi_checking' => $this->input->post('bi_checking', TRUE),
-            );
+        } else { 
+            if($this->input->post('bi_checking') == '3') {
+                $this->session->set_flashdata('message', 'BI-Checking Kol-5 ! Tidak Dapat diproses !');
+                redirect(site_url('tbl_berkas/create'));
+            } else {
+                $data = array(
+                    'kode_booking' => $this->input->post('kode_booking', TRUE),
+                    'nama' => $this->input->post('nama', TRUE),
+                    'nik' => $this->input->post('nik', TRUE),
+                    'pekerjaan' => $this->input->post('pekerjaan', TRUE),
+                    'tanggal_booking' => date('Y-m-d'),
+                    'status' => 'Proses Pengumpulan',
+                    'id_users' => $this->session->userdata('id_users'),
+                    'bi_checking' => $this->input->post('bi_checking', TRUE),
+                    'id_rumah' => $this->input->post('id_rumah_input', TRUE),
+                );
 
+                $dataRumah = array(
+                    'status' => 1,
+                );
 
-            $this->Tbl_berkas_model->insert($data);
-            $this->session->set_flashdata('message', 'Input Data BERHASIL !');
-            redirect(site_url('tbl_berkas'));
+                
+                $this->db->where('id_rumah', $this->input->post('id_rumah_input', TRUE));
+                $this->db->update('tbl_rumah', $dataRumah);
+
+                $this->Tbl_berkas_model->insert($data);
+                $this->session->set_flashdata('message', 'Input Data BERHASIL !');
+                redirect(site_url('tbl_berkas'));
+            }
         }
     }
 
@@ -167,6 +182,13 @@ class Tbl_berkas extends CI_Controller
         $row = $this->Tbl_berkas_model->get_by_id($id);
 
         if ($row) {
+            $dataRumah = array(
+                'status' => 0,
+            );
+
+            $this->db->where('id_rumah', $row->id_rumah);
+            $this->db->update('tbl_rumah', $dataRumah);
+
             $this->Tbl_berkas_model->delete($id);
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('tbl_berkas'));
@@ -188,6 +210,7 @@ class Tbl_berkas extends CI_Controller
             'pekerjaan' => $row->pekerjaan,
             'bi_checking' => $row->bi_checking,
             'tanggal_booking' => $row->tanggal_booking,
+            'id_rumah' => $row->id_rumah,
             'status' => 'Pengumpulan Admin',
             'id_users' => $row->id_users,
             'tanggal_selesai_marketing' => date('Y-m-d'),

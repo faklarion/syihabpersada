@@ -58,6 +58,7 @@
                                 <th>NIK</th>
                                 <th>Pekerjaan</th>
                                 <th>Tanggal Booking</th>
+                                <th>Rumah</th>
                                 <th>Status</th>
                                 <th>BI Checking</th>
                                 <th>Marketing</th>
@@ -78,6 +79,7 @@
                                     <td><?php echo $tbl_berkas_admin->nik ?></td>
                                     <td><?php echo $tbl_berkas_admin->pekerjaan ?></td>
                                     <td><?php echo tanggalIndo($tbl_berkas_admin->tanggal_booking) ?></td>
+                                    <td><?php echo $tbl_berkas_admin->nama_komplek?> - <?php echo $tbl_berkas_admin->blok?><?php echo $tbl_berkas_admin->nomer?></td>
                                     <td><?php echo $tbl_berkas_admin->status ?></td>
                                     <td>
                                         <?php
