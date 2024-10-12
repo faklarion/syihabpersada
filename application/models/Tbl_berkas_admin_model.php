@@ -54,16 +54,16 @@ class Tbl_berkas_admin_model extends CI_Model
     function get_limit_data($limit, $start = 0, $q = NULL) {
         $this->db->order_by($this->id, $this->order);
         $this->db->like('id_berkas', $q);
-	$this->db->or_like('kode_booking', $q);
-	$this->db->or_like('nama', $q);
-	$this->db->or_like('nik', $q);
-	$this->db->or_like('pekerjaan', $q);
-	$this->db->or_like('tanggal_booking', $q);
-	$this->db->or_like('status', $q);
-	$this->db->or_like('id_users', $q);
-	$this->db->or_like('bi_checking', $q);
-	$this->db->or_like('ceklis', $q);
-	$this->db->or_like('tanggal_selesai', $q);
+		$this->db->or_like('kode_booking', $q);
+		$this->db->or_like('nama', $q);
+		$this->db->or_like('nik', $q);
+		$this->db->or_like('pekerjaan', $q);
+		$this->db->or_like('tanggal_booking', $q);
+		$this->db->or_like('status', $q);
+		$this->db->or_like('id_users', $q);
+		$this->db->or_like('bi_checking', $q);
+		$this->db->or_like('ceklis', $q);
+		$this->db->or_like('tanggal_selesai', $q);
 	$this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }
