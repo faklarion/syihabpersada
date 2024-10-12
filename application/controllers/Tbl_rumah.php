@@ -95,6 +95,7 @@ class Tbl_rumah extends CI_Controller
                     'id_komplek' => $id_komplek,
                     'blok' => $blok,
                     'nomer' => $nomer,
+                    'status' => 0,
                 );
 
                 $this->Tbl_rumah_model->insert($data);
